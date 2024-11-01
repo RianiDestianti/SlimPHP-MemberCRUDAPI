@@ -19,7 +19,7 @@ This project integrates [Slim 4](https://www.slimframework.com/) with the power 
 1. Clone the repository:
 
    ```bash
-   git clone <your-repo-url>
+   git clone https://github.com/agesetiabudi/stater-slimphp-eloquent
    ```
 
 2. Install dependencies:
