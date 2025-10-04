@@ -2,21 +2,22 @@
 
 namespace App\Controller;
 
+use App\Model\Order;
 use App\Model\Member;
 use App\Helper\JsonResponse;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 
-final class MemberController
+final class OrderController
 {
     public function index(Request $request, Response $response): Response
     {
-        $members = Member::all();
+        $orders = Order::with('member')->get();
 
         $result = [
             'status' => true,
             'message' => 'Successfully',
-            'data' => $members
+            'data' => $orders
         ];
 
         return JsonResponse::withJson($response, $result, 200);
@@ -26,45 +27,48 @@ final class MemberController
     {
         $post = $request->getParsedBody();
 
-        $member = Member::create($post);
+        $order = Order::create($post);
 
         $result = [
-            'status' => (bool) $member,
-            'message' => $member ? 'Member created successfully' : 'Failed to create member',
-            'data' => $member
+            'status' => (bool) $order,
+            'message' => $order ? 'Order created successfully' : 'Failed to create order',
+            'data' => $order
         ];
 
         return JsonResponse::withJson($response, $result, 200);
     }
 
-    public function update(Request $request, Response $response, array $args): Response
+    public function update(Request $request, Response $response): Response
     {
-        $id = $args['id'];
+        $params = $request->getQueryParams();
         $post = $request->getParsedBody();
 
-        $member = Member::where('id', $id)->first(); 
-     
-        $member->update($post);
+        $orderId = $params['orderId'] ?? null;
+        $order = Order::where('id', $orderId)->first();
+
+        $order->update($post);
 
         $result = [
             'status' => true,
-            'message' => 'Member updated successfully',
-            'data' => $member
+            'message' => 'Order updated successfully',
+            'data' => $order
         ];
 
         return JsonResponse::withJson($response, $result, 200);
     }
 
-    public function delete(Request $request, Response $response, array $args): Response
+    public function delete(Request $request, Response $response): Response
     {
-        $id = $args['id'];
-        $member = Member::where('id', $id)->first(); 
+        $params = $request->getQueryParams();
+        $orderId = $params['orderId'] ?? null;
 
-        $member->delete();
+        $order = Order::where('id', $orderId)->first();
+        $order->delete();
 
         $result = [
             'status' => true,
-            'message' => 'Member deleted successfully'
+            'message' => 'Order deleted successfully',
+            'data' => $order
         ];
 
         return JsonResponse::withJson($response, $result, 200);
