@@ -17,3 +17,8 @@ $app->get('/orders', 'App\Controller\OrderController:index');
 $app->post('/orders', 'App\Controller\OrderController:store');
 $app->put('/orders/{orderId}', 'App\Controller\OrderController:update');
 $app->delete('/orders/{orderId}', 'App\Controller\OrderController:delete');
+
+$app->get('/member-groups', 'App\Controller\MemberGroupController:index');
+$app->post('/member-groups', 'App\Controller\MemberGroupController:create');
+$app->delete('/member-groups/{member_id}/{group_id}', 'App\Controller\MemberGroupController:delete');
+$app->put('/member-groups/{member_id}/{group_id}', 'App\Controller\MemberGroupController:update');
