@@ -23,6 +23,21 @@ final class OrderController
         return JsonResponse::withJson($response, $result, 200);
     }
 
+    public function show(Request $request, Response $response, array $args): Response
+    {
+        $orderId = $args['orderId'] ?? null;
+        
+        $order = Order::with('member')->where('id', $orderId)->first();
+
+        $result = [
+            'status' => true,
+            'message' => 'Successfully',
+            'data' => $order
+        ];
+
+        return JsonResponse::withJson($response, $result, 200);
+    }
+
     public function store(Request $request, Response $response): Response
     {
         $post = $request->getParsedBody();
@@ -38,12 +53,11 @@ final class OrderController
         return JsonResponse::withJson($response, $result, 200);
     }
 
-    public function update(Request $request, Response $response): Response
+    public function update(Request $request, Response $response, array $args): Response
     {
-        $params = $request->getQueryParams();
+        $orderId = $args['orderId'] ?? null;
         $post = $request->getParsedBody();
 
-        $orderId = $params['orderId'] ?? null;
         $order = Order::where('id', $orderId)->first();
 
         $order->update($post);
@@ -57,12 +71,12 @@ final class OrderController
         return JsonResponse::withJson($response, $result, 200);
     }
 
-    public function delete(Request $request, Response $response): Response
+    public function delete(Request $request, Response $response, array $args): Response
     {
-        $params = $request->getQueryParams();
-        $orderId = $params['orderId'] ?? null;
+        $orderId = $args['orderId'] ?? null;
 
         $order = Order::where('id', $orderId)->first();
+
         $order->delete();
 
         $result = [

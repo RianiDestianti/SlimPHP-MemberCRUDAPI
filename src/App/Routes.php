@@ -14,6 +14,7 @@ $app->put('/members/{id}', 'App\Controller\MemberController:update');
 $app->delete('/members/{id}', 'App\Controller\MemberController:delete');
 
 $app->get('/orders', 'App\Controller\OrderController:index');
+$app->get('/orders/{orderId}', 'App\Controller\OrderController:show');
 $app->post('/orders', 'App\Controller\OrderController:store');
 $app->put('/orders/{orderId}', 'App\Controller\OrderController:update');
 $app->delete('/orders/{orderId}', 'App\Controller\OrderController:delete');

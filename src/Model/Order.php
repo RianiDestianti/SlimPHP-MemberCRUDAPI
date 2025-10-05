@@ -5,6 +5,8 @@ use Illuminate\Database\Eloquent\Model as Eloquent;
 class Order extends Eloquent {
     protected $table = 'orders';
     protected $guarded = [];
+    
+    public $timestamps = false;
 
     public function member()
     {
