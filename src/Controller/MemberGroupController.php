@@ -42,17 +42,16 @@ final class MemberGroupController
         return JsonResponse::withJson($response, $result, 200);
     }
 
-    public function update(Request $request, Response $response): Response
+    public function update(Request $request, Response $response, array $args): Response
     {
-        $params   = $request->getQueryParams();
-        $memberId = $params['member_id'] ?? null;
-        $groupId  = $params['group_id'] ?? null;
+        $memberId = $args['member_id'] ?? null;
+        $groupId  = $args['group_id'] ?? null;
         $post     = $request->getParsedBody();
 
         $pivot = MemberGroup::where('member_id', $memberId)
             ->where('group_id', $groupId)
             ->first();
-
+            
         $pivot->role      = $post['role'] ?? $pivot->role;
         $pivot->joined_at = $post['joined_at'] ?? $pivot->joined_at;
         $pivot->save();
@@ -66,15 +65,16 @@ final class MemberGroupController
         return JsonResponse::withJson($response, $result, 200);
     }
 
-    public function delete(Request $request, Response $response): Response
+    public function delete(Request $request, Response $response, array $args): Response
     {
-        $params   = $request->getQueryParams();
-        $memberId = $params['member_id'] ?? null;
-        $groupId  = $params['group_id'] ?? null;
+        $memberId = $args['member_id'] ?? null;
+        $groupId  = $args['group_id'] ?? null;
 
         $pivot = MemberGroup::where('member_id', $memberId)
             ->where('group_id', $groupId)
             ->first();
+
+        $pivot->delete();
 
         $result = [
             'status'  => true,

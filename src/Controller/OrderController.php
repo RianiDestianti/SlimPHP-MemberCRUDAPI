@@ -56,6 +56,7 @@ final class OrderController
     public function update(Request $request, Response $response, array $args): Response
     {
         $orderId = $args['orderId'] ?? null;
+        
         $post = $request->getParsedBody();
 
         $order = Order::where('id', $orderId)->first();
