@@ -14,10 +14,27 @@ final class OrderController
     {
         $orders = Order::with('member')->get();
 
+        $filteredOrders = [];
+
+        foreach ($orders as $order) {
+            $filteredOrders[] = [
+                'id'         => $order->id,
+                'member_id'  => $order->member_id,
+                'order_date' => $order->order_date,
+                'total'      => $order->total,
+                'status'     => $order->status,
+                'member'     => $order->member ? [
+                    'id'     => $order->member->id,
+                    'name'   => $order->member->name,
+                    'status' => $order->member->status,
+                ] : null,
+            ];
+        }
+
         $result = [
-            'status' => true,
+            'status'  => true,
             'message' => 'Successfully',
-            'data' => $orders
+            'data'    => $filteredOrders,
         ];
 
         return JsonResponse::withJson($response, $result, 200);

@@ -13,13 +13,11 @@ final class MemberGroupController
     {
         $data = MemberGroup::with(['member', 'group'])->get();
 
-        $result = [
+        return JsonResponse::withJson($response, [
             'status'  => true,
             'message' => 'List of member groups',
             'data'    => $data
-        ];
-
-        return JsonResponse::withJson($response, $result, 200);
+        ], 200);
     }
 
     public function store(Request $request, Response $response): Response
@@ -29,17 +27,15 @@ final class MemberGroupController
         $pivot = MemberGroup::create([
             'member_id' => $post['member_id'],
             'group_id'  => $post['group_id'],
-            'role'      => $post['role'] ?? null,
-            'joined_at' => $post['joined_at'] ?? null
+            'role'      => $post['role'] ?? 'member',
+            'joined_at' => $post['joined_at'] ?? date('Y-m-d H:i:s'),
         ]);
 
-        $result = [
-            'status'  => (bool) $pivot,
-            'message' => $pivot ? 'Pivot created successfully' : 'Failed to create pivot',
+        return JsonResponse::withJson($response, [
+            'status'  => true,
+            'message' => 'Member group berhasil disimpan',
             'data'    => $pivot
-        ];
-
-        return JsonResponse::withJson($response, $result, 200);
+        ], 200);
     }
 
     public function update(Request $request, Response $response, array $args): Response
@@ -51,18 +47,17 @@ final class MemberGroupController
         $pivot = MemberGroup::where('member_id', $memberId)
             ->where('group_id', $groupId)
             ->first();
-            
-        $pivot->role      = $post['role'] ?? $pivot->role;
-        $pivot->joined_at = $post['joined_at'] ?? $pivot->joined_at;
-        $pivot->save();
 
-        $result = [
+        $pivot->update([
+            'role'      => $post['role'] ?? $pivot->role,
+            'joined_at' => $post['joined_at'] ?? $pivot->joined_at,
+        ]);
+
+        return JsonResponse::withJson($response, [
             'status'  => true,
-            'message' => 'Pivot updated successfully',
+            'message' => 'Member group berhasil diperbarui',
             'data'    => $pivot
-        ];
-
-        return JsonResponse::withJson($response, $result, 200);
+        ], 200);
     }
 
     public function delete(Request $request, Response $response, array $args): Response
@@ -70,17 +65,13 @@ final class MemberGroupController
         $memberId = $args['member_id'] ?? null;
         $groupId  = $args['group_id'] ?? null;
 
-        $pivot = MemberGroup::where('member_id', $memberId)
+        MemberGroup::where('member_id', $memberId)
             ->where('group_id', $groupId)
-            ->first();
+            ->delete();
 
-        $pivot->delete();
-
-        $result = [
+        return JsonResponse::withJson($response, [
             'status'  => true,
-            'message' => 'Pivot deleted successfully'
-        ];
-
-        return JsonResponse::withJson($response, $result, 200);
+            'message' => 'Member group berhasil dihapus'
+        ], 200);
     }
 }
