@@ -13,11 +13,13 @@ final class MemberGroupController
     {
         $data = MemberGroup::with(['member', 'group'])->get();
 
-        return JsonResponse::withJson($response, [
+        $result = [
             'status'  => true,
             'message' => 'List of member groups',
             'data'    => $data
-        ], 200);
+        ];
+
+        return JsonResponse::withJson($response, $result, 200);
     }
 
     public function store(Request $request, Response $response): Response
@@ -31,11 +33,13 @@ final class MemberGroupController
             'joined_at' => $post['joined_at'] ?? date('Y-m-d H:i:s'),
         ]);
 
-        return JsonResponse::withJson($response, [
+        $result = [
             'status'  => true,
             'message' => 'Member group berhasil disimpan',
             'data'    => $pivot
-        ], 200);
+        ];
+
+        return JsonResponse::withJson($response, $result, 200);
     }
 
     public function update(Request $request, Response $response, array $args): Response
@@ -45,19 +49,20 @@ final class MemberGroupController
         $post     = $request->getParsedBody();
 
         $pivot = MemberGroup::where('member_id', $memberId)
-            ->where('group_id', $groupId)
-            ->first();
-
+                            ->where('group_id', $groupId)
+                            ->first();
         $pivot->update([
             'role'      => $post['role'] ?? $pivot->role,
             'joined_at' => $post['joined_at'] ?? $pivot->joined_at,
         ]);
 
-        return JsonResponse::withJson($response, [
+        $result = [
             'status'  => true,
             'message' => 'Member group berhasil diperbarui',
             'data'    => $pivot
-        ], 200);
+        ];
+
+        return JsonResponse::withJson($response, $result, 200);
     }
 
     public function delete(Request $request, Response $response, array $args): Response
@@ -65,13 +70,15 @@ final class MemberGroupController
         $memberId = $args['member_id'] ?? null;
         $groupId  = $args['group_id'] ?? null;
 
-        MemberGroup::where('member_id', $memberId)
-            ->where('group_id', $groupId)
-            ->delete();
-
-        return JsonResponse::withJson($response, [
+        $deleted = MemberGroup::where('member_id', $memberId)
+                              ->where('group_id', $groupId)
+                              ->delete();
+        $result = [
             'status'  => true,
-            'message' => 'Member group berhasil dihapus'
-        ], 200);
+            'message' => 'Member group berhasil dihapus',
+            'data'    => $deleted
+        ];
+
+        return JsonResponse::withJson($response, $result, 200);
     }
 }

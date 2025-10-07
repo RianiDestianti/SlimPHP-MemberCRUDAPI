@@ -29,3 +29,9 @@ $app->get('/groups/{id}', 'App\Controller\GroupController:show');
 $app->post('/groups', 'App\Controller\GroupController:store');
 $app->put('/groups/{id}', 'App\Controller\GroupController:update');
 $app->delete('/groups/{id}', 'App\Controller\GroupController:delete');
+
+$app->get('/groups-list', 'App\Controller\GroupListController:index');
+$app->get('/groups-list/{id}', 'App\Controller\GroupListController:show');
+$app->post('/groups-list', 'App\Controller\GroupListController:addMember');
+$app->put('/groups-list/{member_id}/{group_id}', 'App\Controller\GroupListController:updateMember');
+$app->delete('/groups-list/{member_id}/{group_id}', 'App\Controller\GroupListController:deleteMember');
